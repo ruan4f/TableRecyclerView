@@ -1,0 +1,183 @@
+package com.app.feng.fixtablelayout.adapter;
+
+
+import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
+import android.widget.TextView;
+
+import com.app.feng.fixtablelayout.R;
+import com.app.feng.fixtablelayout.inter.IDataAdapter;
+import com.app.feng.fixtablelayout.widget.SingleLineLinearLayout;
+import com.app.feng.fixtablelayout.widget.TextViewUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
+
+public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHolder> {
+
+    private HorizontalScrollView titleView;
+    private int[] widthColumns = {};
+
+    private ParametersHolder parametersHolder;
+
+    private IDataAdapter dataAdapter;
+    private float mDensity;
+
+    private TableAdapter(
+            HorizontalScrollView titleView,
+            ParametersHolder parametersHolder, IDataAdapter dataAdapter,
+            float density) {
+        super();
+        this.titleView = titleView;
+        this.parametersHolder = parametersHolder;
+        this.dataAdapter = dataAdapter;
+        this.mDensity = density;
+
+        initViews();
+    }
+
+    private int calculatePixels(int dps){
+        int pixels = (int) (dps * this.mDensity + 0.5f);
+
+        return pixels;
+    }
+
+    private void initViews() {
+        SingleLineLinearLayout titleChild = ((SingleLineLinearLayout) titleView.getChildAt(0));
+        widthColumns = new int[dataAdapter.getTitleCount()];
+
+        for (int i = 0; i < dataAdapter.getTitleCount(); i++) {
+            int width = this.calculatePixels(dataAdapter.getHighestWidthText(i));
+
+            widthColumns[i] = width;
+
+            TextView textView = TextViewUtils.generateTextView(titleChild.getContext(),
+                    dataAdapter.getTitleAt(i),
+                    parametersHolder.item_gravity,
+                    width,
+                    10);
+
+            textView.setTextColor(Color.BLACK);
+
+            titleChild.addView(textView, i);
+        }
+        titleChild.setBackgroundColor(parametersHolder.title_color);
+    }
+
+    @Override
+    public TableViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        SingleLineLinearLayout singleLineLinearLayout = new SingleLineLinearLayout(
+                parent.getContext());
+
+        for (int i = 0; i < dataAdapter.getTitleCount(); i++) {
+            TextView textView = TextViewUtils.generateTextView(parent.getContext(), " ",
+                    parametersHolder.item_gravity,
+                    widthColumns[i],
+                    20);
+
+            singleLineLinearLayout.addView(textView, i);
+        }
+
+        return new TableViewHolder(singleLineLinearLayout);
+    }
+
+    @Override
+    public void onBindViewHolder(TableViewHolder holder, int position) {
+        SingleLineLinearLayout ll_content = (SingleLineLinearLayout) holder.itemView;
+        List<TextView> bindViews = new ArrayList<>();
+
+        for (int i = 0; i < dataAdapter.getTitleCount(); i++) {
+            TextView textView = (TextView) ll_content.getChildAt(i);
+            bindViews.add(textView);
+        }
+
+        setBackgrandForItem(position, ll_content);
+
+        int[] attrs = new int[]{R.attr.selectableItemBackground};
+        TypedArray typedArray = ll_content.getContext().obtainStyledAttributes(attrs);
+        int backgroundResource = typedArray.getResourceId(0, 0);
+        ll_content.setBackgroundResource(backgroundResource);
+
+        ll_content.setOnClickListener(dataAdapter.getOnClickListener());
+
+        dataAdapter.convertData(position, bindViews);
+    }
+
+    private void setBackgrandForItem(int position, SingleLineLinearLayout ll_content) {
+        if (position % 2 != 0) {
+            ll_content.setBackgroundColor(parametersHolder.col_1_color);
+        } else {
+            ll_content.setBackgroundColor(parametersHolder.col_2_color);
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return dataAdapter.getItemCount();
+    }
+
+    class TableViewHolder extends RecyclerView.ViewHolder {
+        TableViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    public static class ParametersHolder {
+        int col_1_color;
+        int col_2_color;
+        int title_color;
+        int item_padding;
+        int item_gravity;
+
+        public ParametersHolder(int s_color, int b_color, int title_color,
+                                int item_padding, int item_gravity) {
+            this.col_1_color = s_color;
+            this.col_2_color = b_color;
+            this.title_color = title_color;
+            this.item_padding = item_padding;
+            this.item_gravity = item_gravity;
+        }
+    }
+
+    public static class Builder {
+        HorizontalScrollView titleView;
+
+        ParametersHolder parametersHolder;
+        IDataAdapter dataAdapter;
+        float density;
+
+        public Builder setTitleView(HorizontalScrollView titleView) {
+            this.titleView = titleView;
+            return this;
+        }
+
+        public Builder setParametersHolder(
+                ParametersHolder parametersHolder) {
+            this.parametersHolder = parametersHolder;
+            return this;
+        }
+
+        public Builder setDataAdapter(IDataAdapter dataAdapter) {
+            this.dataAdapter = dataAdapter;
+            return this;
+        }
+
+        public Builder setDensity(float density) {
+            this.density = density;
+            return this;
+        }
+
+        public TableAdapter create() {
+            return new TableAdapter(titleView, parametersHolder, dataAdapter, density);
+        }
+    }
+
+    public void notifyLoadData() {
+        notifyDataSetChanged();
+    }
+}
