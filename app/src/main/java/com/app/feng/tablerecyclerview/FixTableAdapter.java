@@ -12,10 +12,6 @@ import com.app.feng.tablerecyclerview.bean.DataBean;
 
 import java.util.List;
 
-/**
- * Created by feng on 2017/4/4.
- */
-
 public class FixTableAdapter implements IDataAdapter {
 
     public String[] titles;
@@ -74,11 +70,7 @@ public class FixTableAdapter implements IDataAdapter {
     }
 
     @Override
-    public void convertLeftData(int position,TextView bindView) {
-        bindView.setText(data.get(position).id);
-    }
-
-    private String getHighestText(String highestText, String field, int pos){
+    public String getHighestText(String highestText, String field, int pos){
         if (highestText.length() < field.length() && titles[pos].length() < field.length()){
             highestText = field;
         } else if (highestText.length() < titles[pos].length()) {
@@ -91,12 +83,6 @@ public class FixTableAdapter implements IDataAdapter {
     @Override
     public int getHighestWidthText(int pos) {
         String highestText = "";
-        /*
-        * Para pegar o maior valor daquela coluna eu devo varrer todas as linhas
-        * e ver o maior texto, a partir desse valor eu devo calcular o width para ser padrão
-        * para todos os itens daquela coluna
-        *
-        * */
 
         for (DataBean item: data) {
             switch (pos){
@@ -133,7 +119,6 @@ public class FixTableAdapter implements IDataAdapter {
         Rect bounds = new Rect();
         Paint mTextPaint = new Paint();
         mTextPaint.getTextBounds(highestText, 0, highestText.length(), bounds);
-        int height = bounds.height();
         int width = bounds.width() + 30;
 
         return width;
