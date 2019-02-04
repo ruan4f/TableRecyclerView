@@ -168,20 +168,24 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
         View firstView = getChildAt(0);
 
-        int firstViewWidth = firstView.getMeasuredWidth();
-        if (firstViewWidth <= getWidth()) {
+        if (firstView != null) {
+            int firstViewWidth = firstView.getMeasuredWidth();
+            if (firstViewWidth <= getWidth()) {
+                return 0;
+            }
+
+            if (horizontalOffset + dx > firstViewWidth - getWidth()) {
+                dx = 0;
+            } else if (horizontalOffset + dx <= 0) {
+                dx = 0;
+            }
+
+            horizontalOffset += dx;
+            offsetChildrenHorizontal(-dx);
+            return dx;
+        } else {
             return 0;
         }
-
-        if (horizontalOffset + dx > firstViewWidth - getWidth()) {
-            dx = 0;
-        } else if (horizontalOffset + dx <= 0) {
-            dx = 0;
-        }
-
-        horizontalOffset += dx;
-        offsetChildrenHorizontal(-dx);
-        return dx;
     }
 
     @Override
