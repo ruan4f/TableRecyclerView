@@ -32,6 +32,8 @@ public class TableAdapter extends RecyclerView.Adapter<TableViewHolder> {
     private SparseBooleanArray selectedItems;
     private int positionSelected = -1;
 
+    private ViewGroup parentTest;
+
     private TableAdapter(
             HorizontalScrollView titleView,
             ParametersHolder parametersHolder, IDataAdapter dataAdapter,
@@ -129,7 +131,15 @@ public class TableAdapter extends RecyclerView.Adapter<TableViewHolder> {
                 positionSelected = -1;
                 selectedItems.delete(pos);
                 view.setActivated(selectedItems.get(pos, false));
-            } else if (selectedItems.size() == 0) {
+            } else {
+                if (positionSelected > -1) {
+                    selectedItems.delete(positionSelected);
+
+                    notifyItemChanged(0, );
+
+                    //view.setActivated(selectedItems.get(positionSelected, false));
+                    notifyItemChanged(positionSelected);
+                }
                 positionSelected = pos;
                 selectedItems.put(pos, true);
                 view.setActivated(selectedItems.get(pos, true));
