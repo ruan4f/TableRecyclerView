@@ -3,7 +3,6 @@ package com.app.feng.fixtablelayout.adapter;
 
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,23 +103,22 @@ public class TableAdapter extends RecyclerView.Adapter<TableViewHolder> {
 
         setBackgrandForItem(position, ll_content);
 
-        //int[] attrs = new int[]{R.attr.selectableItemBackground};
-        //TypedArray typedArray = ll_content.getContext().obtainStyledAttributes(attrs);
-        //int backgroundResource = typedArray.getResourceId(0, 0);
-        //ll_content.setBackgroundResource(backgroundResource);
+        if (parametersHolder.enable_selection) {
+            ll_content.setBackgroundResource(R.drawable.statelist_item_background);
+            ll_content.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleSelection(position, ll_content);
+                }
+            });
+        } else {
+            int[] attrs = new int[]{R.attr.selectableItemBackground};
+            TypedArray typedArray = ll_content.getContext().obtainStyledAttributes(attrs);
+            int backgroundResource = typedArray.getResourceId(0, 0);
+            ll_content.setBackgroundResource(backgroundResource);
 
-        ll_content.setBackgroundResource(R.drawable.statelist_item_background);
-
-        //ll_content.setOnClickListener(dataAdapter.getOnClickListener());
-
-        ll_content.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("logou", "logou as infomações");
-
-                toggleSelection(position, ll_content);
-            }
-        });
+            ll_content.setOnClickListener(dataAdapter.getOnClickListener());
+        }
 
         dataAdapter.convertData(position, bindViews);
     }
@@ -166,14 +164,16 @@ public class TableAdapter extends RecyclerView.Adapter<TableViewHolder> {
         int title_color;
         int item_padding;
         int item_gravity;
+        boolean enable_selection;
 
         public ParametersHolder(int s_color, int b_color, int title_color,
-                                int item_padding, int item_gravity) {
+                                int item_padding, int item_gravity, boolean enable_selection) {
             this.col_1_color = s_color;
             this.col_2_color = b_color;
             this.title_color = title_color;
             this.item_padding = item_padding;
             this.item_gravity = item_gravity;
+            this.enable_selection = enable_selection;
         }
     }
 

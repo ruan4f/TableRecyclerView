@@ -12,7 +12,8 @@
         app:fixtable_divider_color="@color/table_divider_color"
         app:fixtable_divider_height="@dimen/table_divider_height"
         app:fixtable_item_gravity="CENTER"
-        app:fixtable_title_color="#C5CDEF" />
+        app:fixtable_title_color="#C5CDEF"
+        app:fixtable_enable_selection="true"/>
 
     <Button
         android:id="@+id/btnReenviar"

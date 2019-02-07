@@ -40,6 +40,7 @@ public class FixTableLayout extends FrameLayout {
     int title_color;
     int item_padding;
     int item_gravity;
+    boolean enable_selection;
 
     private IDataAdapter dataAdapter;
 
@@ -63,18 +64,14 @@ public class FixTableLayout extends FrameLayout {
 
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.FixTableLayout);
 
-        divider_height = array.getDimensionPixelOffset(
-                R.styleable.FixTableLayout_fixtable_divider_height,
-                getResources().getDimensionPixelOffset(R.dimen.divider_default_value));
-        divider_color = array.getColor(R.styleable.FixTableLayout_fixtable_divider_color,
-                Color.BLACK);
-        col_1_color = array.getColor(R.styleable.FixTableLayout_fixtable_column_1_color,
-                Color.WHITE);
-        col_2_color = array.getColor(R.styleable.FixTableLayout_fixtable_column_2_color,
-                Color.WHITE);
+        divider_height = array.getDimensionPixelOffset(R.styleable.FixTableLayout_fixtable_divider_height, getResources().getDimensionPixelOffset(R.dimen.divider_default_value));
+        divider_color = array.getColor(R.styleable.FixTableLayout_fixtable_divider_color, Color.BLACK);
+        col_1_color = array.getColor(R.styleable.FixTableLayout_fixtable_column_1_color, Color.WHITE);
+        col_2_color = array.getColor(R.styleable.FixTableLayout_fixtable_column_2_color, Color.WHITE);
         title_color = array.getColor(R.styleable.FixTableLayout_fixtable_title_color, Color.GRAY);
 
         item_gravity = array.getInteger(R.styleable.FixTableLayout_fixtable_item_gravity, 0);
+        enable_selection = array.getBoolean(R.styleable.FixTableLayout_fixtable_enable_selection, false);
 
         switch (item_gravity) {
             case 0:
@@ -178,7 +175,7 @@ public class FixTableLayout extends FrameLayout {
                 .setTitleView(titleView)
                 .setParametersHolder(
                         new TableAdapter.ParametersHolder(col_1_color, col_2_color, title_color,
-                                item_padding, item_gravity))
+                                item_padding, item_gravity, enable_selection))
                 .setDataAdapter(dataAdapter)
                 .setDensity(mDensity)
                 .create();

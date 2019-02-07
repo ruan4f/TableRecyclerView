@@ -1,5 +1,6 @@
 package com.app.feng.tablerecyclerview;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
@@ -13,6 +14,7 @@ import com.app.feng.tablerecyclerview.bean.DataBean;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainSelectableActivity extends AppCompatActivity {
@@ -38,39 +40,97 @@ public class MainSelectableActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_selectable);
 
         for (int i = 0; i < 40; i++) {
-            data.add(new DataBean("id__", "Eu estou testando texto grande", "data2", "data3", "Texto grande será que funciona", "data5", "data6", "data7",
+            this.data.add(new DataBean("id__", "Eu estou testando texto grande", "data2", "data3", "Texto grande será que funciona", "data5", "data6", "data7",
                     "data8"));
         }
 
+        this.btnReenviar = findViewById(R.id.btnReenviar);
+        this.btnExcluir = findViewById(R.id.btnExcluir);
         this.fixTableLayout = findViewById(R.id.fixTableLayout);
 
         final FixTableAdapter fixTableAdapter = new FixTableAdapter(title, data, MainSelectableActivity.this);
 
         this.fixTableLayout.setAdapter(fixTableAdapter);
 
-        int position = fixTableLayout.getPositionSelected();
+        initListeners();
+    }
 
-        this.fixTableLayout.enableLoadMoreData();
-
-        this.fixTableLayout.setLoadMoreListener(new ILoadMoreListener() {
+    private void initListeners() {
+        this.btnExcluir.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void loadMoreData(final Message message) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (currentPage <= totalPage) {
-                            for (int i = 0; i < 50; i++) {
-                                data.add(new DataBean("update_id", "update_data", "data2", "data3", "data4", "data5",
-                                        "data6", "data7", "data8"));
-                            }
-                            currentPage++;
-                            message.arg1 = 50; // 更新了50条数据
-                        } else {
-                            message.arg1 = 0;
-                        }
-                        message.sendToTarget();
-                    }
-                }).start();
+            public void onClick(View v) {
+                int index = fixTableLayout.getPositionSelected();
+
+                final AlertDialog.Builder builder = new AlertDialog.Builder(MainSelectableActivity.this);
+
+                if (index > -1) {
+                    itemSelected = data.get(fixTableLayout.getPositionSelected());
+
+                    builder
+                            .setMessage("Deseja excluir o livro " + itemSelected.data2 + "?")
+                            .setNegativeButton("NÃO", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            })
+                            .setPositiveButton("SIM", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            })
+                            .show();
+                } else {
+                    builder
+                            .setMessage("Por favor selecione um livro para excluir")
+                            .setPositiveButton("OK",  new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                }
+            }
+        });
+
+        this.btnReenviar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int index = fixTableLayout.getPositionSelected();
+
+                final AlertDialog.Builder builder = new AlertDialog.Builder(MainSelectableActivity.this);
+
+                if (index > -1) {
+                    itemSelected = data.get(fixTableLayout.getPositionSelected());
+
+                    builder
+                            .setMessage("Deseja reenviar o livro " + itemSelected.data2 + "?")
+                            .setNegativeButton("NÃO", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            })
+                            .setPositiveButton("SIM", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            })
+                            .show();
+                } else {
+                    builder
+                            .setMessage("Por favor selecione um livro para reenviar")
+                            .setPositiveButton("OK",  new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                }
             }
         });
     }

@@ -15,6 +15,7 @@
         </attr>
 
         <attr name="fixtable_show_item_divider" format="boolean"/>
+        <attr name="fixtable_enable_selection" format="boolean"/>
     </declare-styleable>
 
 </resources>
