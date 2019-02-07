@@ -133,6 +133,11 @@ public class FixTableLayout extends FrameLayout {
     int lastVisablePos = -1;
     FixTableHandler fixTableHandler;
 
+    public int getPositionSelected(){
+        TableAdapter tableAdapter = (TableAdapter) recyclerView.getAdapter();
+        return tableAdapter.getPositionSelected();
+    }
+
     public void enableLoadMoreData() {
         fixTableHandler = new FixTableHandler(FixTableLayout.this, recyclerView);
 

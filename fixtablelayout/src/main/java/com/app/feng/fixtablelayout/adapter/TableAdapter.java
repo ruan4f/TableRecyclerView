@@ -31,6 +31,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableViewHolder> {
     private float mDensity;
 
     private SparseBooleanArray selectedItems;
+    private int positionSelected = -1;
 
     private TableAdapter(
             HorizontalScrollView titleView,
@@ -121,23 +122,29 @@ public class TableAdapter extends RecyclerView.Adapter<TableViewHolder> {
             }
         });
 
-        ll_content.setActivated(selectedItems.get(position, false));
         dataAdapter.convertData(position, bindViews);
     }
 
-    public void toggleSelection(int pos, SingleLineLinearLayout view) {
+    private void toggleSelection(int pos, SingleLineLinearLayout view) {
         if (pos != RecyclerView.NO_POSITION) {
             if (selectedItems.get(pos, false)) {
+                positionSelected = -1;
                 selectedItems.delete(pos);
                 view.setActivated(selectedItems.get(pos, false));
-            } else {
+            } else if (selectedItems.size() == 0) {
+                positionSelected = pos;
                 selectedItems.put(pos, true);
                 view.setActivated(selectedItems.get(pos, true));
             }
 
             notifyItemChanged(pos);
+        } else {
+            positionSelected = -1;
         }
+    }
 
+    public int getPositionSelected() {
+        return positionSelected;
     }
 
     private void setBackgrandForItem(int position, SingleLineLinearLayout ll_content) {

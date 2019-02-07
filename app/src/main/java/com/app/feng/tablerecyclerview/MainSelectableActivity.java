@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.View;
+import android.widget.Button;
 
 import com.app.feng.fixtablelayout.FixTableLayout;
 import com.app.feng.fixtablelayout.inter.ILoadMoreListener;
@@ -26,6 +27,11 @@ public class MainSelectableActivity extends AppCompatActivity {
 
     private FixTableLayout fixTableLayout;
 
+    private DataBean itemSelected;
+
+    private Button btnReenviar;
+    private Button btnExcluir;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,15 +48,7 @@ public class MainSelectableActivity extends AppCompatActivity {
 
         this.fixTableLayout.setAdapter(fixTableAdapter);
 
-        this.fixTableLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent mIntent = new Intent(MainSelectableActivity.this, DetailBookActivity.class);
-                mIntent.putExtra("icon", "test");
-
-                startActivity(mIntent);
-            }
-        });
+        int position = fixTableLayout.getPositionSelected();
 
         this.fixTableLayout.enableLoadMoreData();
 

@@ -14,4 +14,17 @@
         app:fixtable_item_gravity="CENTER"
         app:fixtable_title_color="#C5CDEF" />
 
+    <Button
+        android:id="@+id/btnReenviar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Reenviar" />
+
+    <Button
+        android:id="@+id/btnExcluir"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Excluir" />
+
+
 </LinearLayout>
