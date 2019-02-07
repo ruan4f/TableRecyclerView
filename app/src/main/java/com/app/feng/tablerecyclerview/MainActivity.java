@@ -40,16 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
         fixTableLayout.setAdapter(fixTableAdapter);
 
-        fixTableLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent mIntent = new Intent(MainActivity.this, DetailBookActivity.class);
-                mIntent.putExtra("icon", "test");
-
-                startActivity(mIntent);
-            }
-        });
-
         fixTableLayout.enableLoadMoreData();
 
         fixTableLayout.setLoadMoreListener(new ILoadMoreListener() {

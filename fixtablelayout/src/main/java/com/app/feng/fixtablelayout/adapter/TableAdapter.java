@@ -3,6 +3,8 @@ package com.app.feng.fixtablelayout.adapter;
 
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
@@ -18,7 +20,7 @@ import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHolder> {
+public class TableAdapter extends RecyclerView.Adapter<TableViewHolder> {
 
     private HorizontalScrollView titleView;
     private int[] widthColumns = {};
@@ -27,6 +29,8 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
 
     private IDataAdapter dataAdapter;
     private float mDensity;
+
+    private SparseBooleanArray selectedItems;
 
     private TableAdapter(
             HorizontalScrollView titleView,
@@ -37,6 +41,8 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
         this.parametersHolder = parametersHolder;
         this.dataAdapter = dataAdapter;
         this.mDensity = density;
+
+        this.selectedItems = new SparseBooleanArray();
 
         initViews();
     }
@@ -87,7 +93,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
     }
 
     @Override
-    public void onBindViewHolder(TableViewHolder holder, int position) {
+    public void onBindViewHolder(TableViewHolder holder, final int position) {
         SingleLineLinearLayout ll_content = (SingleLineLinearLayout) holder.itemView;
         List<TextView> bindViews = new ArrayList<>();
 
@@ -98,14 +104,37 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
 
         setBackgrandForItem(position, ll_content);
 
-        int[] attrs = new int[]{R.attr.selectableItemBackground};
-        TypedArray typedArray = ll_content.getContext().obtainStyledAttributes(attrs);
-        int backgroundResource = typedArray.getResourceId(0, 0);
-        ll_content.setBackgroundResource(backgroundResource);
+        //int[] attrs = new int[]{R.attr.selectableItemBackground};
+        //TypedArray typedArray = ll_content.getContext().obtainStyledAttributes(attrs);
+        //int backgroundResource = typedArray.getResourceId(0, 0);
+        //ll_content.setBackgroundResource(backgroundResource);
 
-        ll_content.setOnClickListener(dataAdapter.getOnClickListener());
+        ll_content.setBackgroundResource(R.drawable.statelist_item_background);
+
+        //ll_content.setOnClickListener(dataAdapter.getOnClickListener());
+
+        ll_content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("logou", "logou as infomações");
+
+                toggleSelection(position);
+            }
+        });
+
+        ll_content.setActivated(selectedItems.get(position, false));
 
         dataAdapter.convertData(position, bindViews);
+    }
+
+    public void toggleSelection(int pos) {
+        if (selectedItems.get(pos, false)) {
+            selectedItems.delete(pos);
+        } else {
+            //selectedItems.clear();
+            selectedItems.put(pos, true);
+        }
+        notifyItemChanged(pos);
     }
 
     private void setBackgrandForItem(int position, SingleLineLinearLayout ll_content) {
@@ -119,12 +148,6 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
     @Override
     public int getItemCount() {
         return dataAdapter.getItemCount();
-    }
-
-    class TableViewHolder extends RecyclerView.ViewHolder {
-        TableViewHolder(View itemView) {
-            super(itemView);
-        }
     }
 
     public static class ParametersHolder {

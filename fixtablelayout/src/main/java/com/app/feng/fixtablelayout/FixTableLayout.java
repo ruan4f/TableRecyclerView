@@ -163,10 +163,6 @@ public class FixTableLayout extends FrameLayout {
         });
     }
 
-    public void setOnClickListener(OnClickListener action){
-        recyclerView.setOnClickListener(action);
-    }
-
     public void setLoadMoreListener(ILoadMoreListener loadMoreListener) {
         this.loadMoreListener = loadMoreListener;
     }
