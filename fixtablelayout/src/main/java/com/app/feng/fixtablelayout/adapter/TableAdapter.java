@@ -47,7 +47,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableViewHolder> {
         initViews();
     }
 
-    private int calculatePixels(int dps){
+    private int calculatePixels(int dps) {
         int pixels = (int) (dps * this.mDensity + 0.5f);
 
         return pixels;
@@ -77,8 +77,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableViewHolder> {
 
     @Override
     public TableViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        SingleLineLinearLayout singleLineLinearLayout = new SingleLineLinearLayout(
-                parent.getContext());
+        SingleLineLinearLayout singleLineLinearLayout = new SingleLineLinearLayout(parent.getContext());
 
         for (int i = 0; i < dataAdapter.getTitleCount(); i++) {
             TextView textView = TextViewUtils.generateTextView(parent.getContext(), " ",
@@ -94,7 +93,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableViewHolder> {
 
     @Override
     public void onBindViewHolder(TableViewHolder holder, final int position) {
-        SingleLineLinearLayout ll_content = (SingleLineLinearLayout) holder.itemView;
+        final SingleLineLinearLayout ll_content = (SingleLineLinearLayout) holder.itemView;
         List<TextView> bindViews = new ArrayList<>();
 
         for (int i = 0; i < dataAdapter.getTitleCount(); i++) {
@@ -118,23 +117,27 @@ public class TableAdapter extends RecyclerView.Adapter<TableViewHolder> {
             public void onClick(View v) {
                 Log.i("logou", "logou as infomações");
 
-                toggleSelection(position);
+                toggleSelection(position, ll_content);
             }
         });
 
         ll_content.setActivated(selectedItems.get(position, false));
-
         dataAdapter.convertData(position, bindViews);
     }
 
-    public void toggleSelection(int pos) {
-        if (selectedItems.get(pos, false)) {
-            selectedItems.delete(pos);
-        } else {
-            //selectedItems.clear();
-            selectedItems.put(pos, true);
+    public void toggleSelection(int pos, SingleLineLinearLayout view) {
+        if (pos != RecyclerView.NO_POSITION) {
+            if (selectedItems.get(pos, false)) {
+                selectedItems.delete(pos);
+                view.setActivated(selectedItems.get(pos, false));
+            } else {
+                selectedItems.put(pos, true);
+                view.setActivated(selectedItems.get(pos, true));
+            }
+
+            notifyItemChanged(pos);
         }
-        notifyItemChanged(pos);
+
     }
 
     private void setBackgrandForItem(int position, SingleLineLinearLayout ll_content) {
