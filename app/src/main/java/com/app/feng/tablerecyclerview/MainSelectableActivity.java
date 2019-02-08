@@ -39,8 +39,8 @@ public class MainSelectableActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_selectable);
 
-        for (int i = 0; i < 40; i++) {
-            this.data.add(new DataBean("id__", "Eu estou testando texto grande", "data2", "data3", "Texto grande será que funciona", "data5", "data6", "data7",
+        for (int i = 0; i < 9; i++) {
+            this.data.add(new DataBean("id__", "Eu estou testando texto grande", "data" + i, "data3", "Texto grande será que funciona", "data5", "data6", "data7",
                     "data8"));
         }
 

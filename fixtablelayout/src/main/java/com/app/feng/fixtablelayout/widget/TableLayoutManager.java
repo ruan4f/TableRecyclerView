@@ -1,6 +1,7 @@
 package com.app.feng.fixtablelayout.widget;
 
 import android.graphics.Rect;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,9 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             detachAndScrapAttachedViews(recycler);
             return;
         }
+
+        Log.i("Ruan total", "" + state.getItemCount());
+        Log.i("Ruan filhos", "" + getChildCount());
 
         if (getChildCount() == 0 && state.isPreLayout()) {//state.isPreLayout()是支持动画的
             return;
@@ -149,8 +153,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
     @Override
     public RecyclerView.LayoutParams generateDefaultLayoutParams() {
-        return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+        return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     @Override

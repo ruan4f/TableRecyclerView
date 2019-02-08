@@ -3,6 +3,7 @@ package com.app.feng.fixtablelayout.adapter;
 
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class TableAdapter extends RecyclerView.Adapter<TableViewHolder> {
+public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHolder> {
 
     private HorizontalScrollView titleView;
     private int[] widthColumns = {};
@@ -31,8 +32,6 @@ public class TableAdapter extends RecyclerView.Adapter<TableViewHolder> {
 
     private SparseBooleanArray selectedItems;
     private int positionSelected = -1;
-
-    private ViewGroup parentTest;
 
     private TableAdapter(
             HorizontalScrollView titleView,
@@ -47,6 +46,59 @@ public class TableAdapter extends RecyclerView.Adapter<TableViewHolder> {
         this.selectedItems = new SparseBooleanArray();
 
         initViews();
+    }
+
+    @Override
+    public TableViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        SingleLineLinearLayout singleLineLinearLayout = new SingleLineLinearLayout(parent.getContext());
+
+        for (int i = 0; i < dataAdapter.getTitleCount(); i++) {
+            TextView textView = TextViewUtils.generateTextView(parent.getContext(), " ",
+                    parametersHolder.item_gravity,
+                    widthColumns[i],
+                    20);
+
+            singleLineLinearLayout.addView(textView, i);
+        }
+
+        return new TableViewHolder(singleLineLinearLayout);
+    }
+
+    @Override
+    public void onBindViewHolder(TableAdapter.TableViewHolder holder, final int position) {
+        final SingleLineLinearLayout ll_content = (SingleLineLinearLayout) holder.itemView;
+        List<TextView> bindViews = new ArrayList<>();
+
+        for (int i = 0; i < dataAdapter.getTitleCount(); i++) {
+            TextView textView = (TextView) ll_content.getChildAt(i);
+            bindViews.add(textView);
+        }
+
+        setBackgrandForItem(position, ll_content);
+
+        if (parametersHolder.enable_selection) {
+            //ll_content.setBackgroundResource(R.drawable.statelist_item_background);
+            //ll_content.setActivated(position == positionSelected);
+            Log.i("valor", "" + holder.getAdapterPosition());
+            ll_content.setBackgroundResource(R.drawable.statelist_item_background);
+            //ll_content.setActivated(holder.getAdapterPosition() == positionSelected);
+
+            ll_content.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleSelection(position, ll_content);
+                }
+            });
+        } else {
+            int[] attrs = new int[]{R.attr.selectableItemBackground};
+            TypedArray typedArray = ll_content.getContext().obtainStyledAttributes(attrs);
+            int backgroundResource = typedArray.getResourceId(0, 0);
+            ll_content.setBackgroundResource(backgroundResource);
+
+            ll_content.setOnClickListener(dataAdapter.getOnClickListener());
+        }
+
+        dataAdapter.convertData(position, bindViews);
     }
 
     private int calculatePixels(int dps) {
@@ -77,74 +129,21 @@ public class TableAdapter extends RecyclerView.Adapter<TableViewHolder> {
         titleChild.setBackgroundColor(parametersHolder.title_color);
     }
 
-    @Override
-    public TableViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        SingleLineLinearLayout singleLineLinearLayout = new SingleLineLinearLayout(parent.getContext());
-
-        for (int i = 0; i < dataAdapter.getTitleCount(); i++) {
-            TextView textView = TextViewUtils.generateTextView(parent.getContext(), " ",
-                    parametersHolder.item_gravity,
-                    widthColumns[i],
-                    20);
-
-            singleLineLinearLayout.addView(textView, i);
-        }
-
-        return new TableViewHolder(singleLineLinearLayout);
-    }
-
-    @Override
-    public void onBindViewHolder(TableViewHolder holder, final int position) {
-        final SingleLineLinearLayout ll_content = (SingleLineLinearLayout) holder.itemView;
-        List<TextView> bindViews = new ArrayList<>();
-
-        for (int i = 0; i < dataAdapter.getTitleCount(); i++) {
-            TextView textView = (TextView) ll_content.getChildAt(i);
-            bindViews.add(textView);
-        }
-
-        setBackgrandForItem(position, ll_content);
-
-        if (parametersHolder.enable_selection) {
-            ll_content.setBackgroundResource(R.drawable.statelist_item_background);
-            ll_content.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleSelection(position, ll_content);
-                }
-            });
-        } else {
-            int[] attrs = new int[]{R.attr.selectableItemBackground};
-            TypedArray typedArray = ll_content.getContext().obtainStyledAttributes(attrs);
-            int backgroundResource = typedArray.getResourceId(0, 0);
-            ll_content.setBackgroundResource(backgroundResource);
-
-            ll_content.setOnClickListener(dataAdapter.getOnClickListener());
-        }
-
-        dataAdapter.convertData(position, bindViews);
-    }
-
     private void toggleSelection(int pos, SingleLineLinearLayout view) {
         if (pos != RecyclerView.NO_POSITION) {
             if (selectedItems.get(pos, false)) {
                 positionSelected = -1;
                 selectedItems.delete(pos);
                 view.setActivated(selectedItems.get(pos, false));
-            } else {
-                if (positionSelected > -1) {
+            } else if (selectedItems.size() == 0) {
+                /*if (positionSelected > -1) {
                     selectedItems.delete(positionSelected);
-
-                    notifyItemChanged(0, );
-
-                    //view.setActivated(selectedItems.get(positionSelected, false));
                     notifyItemChanged(positionSelected);
-                }
+                }*/
                 positionSelected = pos;
                 selectedItems.put(pos, true);
                 view.setActivated(selectedItems.get(pos, true));
             }
-
             notifyItemChanged(pos);
         } else {
             positionSelected = -1;
@@ -166,6 +165,23 @@ public class TableAdapter extends RecyclerView.Adapter<TableViewHolder> {
     @Override
     public int getItemCount() {
         return dataAdapter.getItemCount();
+    }
+
+    class TableViewHolder extends RecyclerView.ViewHolder {
+
+        public TableViewHolder(final View itemView) {
+            super(itemView);
+
+            /*View.OnClickListener clickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    positionSelected = getAdapterPosition();
+                    notifyItemRangeChanged(0, dataAdapter.getItemCount());
+                }
+            };
+
+            itemView.setOnClickListener(clickListener);*/
+        }
     }
 
     public static class ParametersHolder {

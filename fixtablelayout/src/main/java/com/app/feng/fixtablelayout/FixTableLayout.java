@@ -21,6 +21,8 @@ import com.app.feng.fixtablelayout.widget.TableLayoutManager;
 import java.lang.ref.WeakReference;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
