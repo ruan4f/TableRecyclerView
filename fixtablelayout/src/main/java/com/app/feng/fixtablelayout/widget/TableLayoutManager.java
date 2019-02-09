@@ -48,6 +48,9 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         }
 
         detachAndScrapAttachedViews(recycler);
+
+
+
         verticalOffset = 0;
         firstVisPos = 0;
         lastVisPos = state.getItemCount();
