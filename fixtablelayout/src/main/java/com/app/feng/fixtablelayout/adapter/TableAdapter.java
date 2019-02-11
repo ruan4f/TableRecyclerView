@@ -138,16 +138,17 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
         public TableViewHolder(final View itemView) {
             super(itemView);
 
-            View.OnClickListener clickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    positionSelected = getAdapterPosition();
-                    notifyItemRangeChanged(0, dataAdapter.getItemCount());
-                    //notifyDataSetChanged();
-                }
-            };
+            if(parametersHolder.enable_selection){
+                View.OnClickListener clickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        positionSelected = getAdapterPosition();
+                        notifyItemRangeChanged(0, dataAdapter.getItemCount());
+                    }
+                };
 
-            itemView.setOnClickListener(clickListener);
+                itemView.setOnClickListener(clickListener);
+            }
         }
     }
 
