@@ -205,7 +205,6 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
     }
 
     public void notifyLoadData() {
-        //notifyDataSetChanged();
-        notifyItemRangeChanged(0, dataAdapter.getItemCount());
+        notifyDataSetChanged();
     }
 }
