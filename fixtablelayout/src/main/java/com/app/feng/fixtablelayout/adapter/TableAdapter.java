@@ -30,7 +30,6 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
     private IDataAdapter dataAdapter;
     private float mDensity;
 
-    private SparseBooleanArray selectedItems;
     private int positionSelected = -1;
 
     private TableAdapter(
@@ -42,8 +41,6 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
         this.parametersHolder = parametersHolder;
         this.dataAdapter = dataAdapter;
         this.mDensity = density;
-
-        this.selectedItems = new SparseBooleanArray();
 
         initViews();
     }
@@ -77,18 +74,8 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
         setBackgrandForItem(position, ll_content);
 
         if (parametersHolder.enable_selection) {
-            //ll_content.setBackgroundResource(R.drawable.statelist_item_background);
-            //ll_content.setActivated(position == positionSelected);
-            Log.i("valor", "" + holder.getAdapterPosition());
             ll_content.setBackgroundResource(R.drawable.statelist_item_background);
-            //ll_content.setActivated(holder.getAdapterPosition() == positionSelected);
-
-            ll_content.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleSelection(position, ll_content);
-                }
-            });
+            ll_content.setActivated(position == positionSelected);
         } else {
             int[] attrs = new int[]{R.attr.selectableItemBackground};
             TypedArray typedArray = ll_content.getContext().obtainStyledAttributes(attrs);
@@ -129,27 +116,6 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
         titleChild.setBackgroundColor(parametersHolder.title_color);
     }
 
-    private void toggleSelection(int pos, SingleLineLinearLayout view) {
-        if (pos != RecyclerView.NO_POSITION) {
-            if (selectedItems.get(pos, false)) {
-                positionSelected = -1;
-                selectedItems.delete(pos);
-                view.setActivated(selectedItems.get(pos, false));
-            } else if (selectedItems.size() == 0) {
-                /*if (positionSelected > -1) {
-                    selectedItems.delete(positionSelected);
-                    notifyItemChanged(positionSelected);
-                }*/
-                positionSelected = pos;
-                selectedItems.put(pos, true);
-                view.setActivated(selectedItems.get(pos, true));
-            }
-            notifyItemChanged(pos);
-        } else {
-            positionSelected = -1;
-        }
-    }
-
     public int getPositionSelected() {
         return positionSelected;
     }
@@ -172,15 +138,16 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
         public TableViewHolder(final View itemView) {
             super(itemView);
 
-            /*View.OnClickListener clickListener = new View.OnClickListener() {
+            View.OnClickListener clickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     positionSelected = getAdapterPosition();
                     notifyItemRangeChanged(0, dataAdapter.getItemCount());
+                    //notifyDataSetChanged();
                 }
             };
 
-            itemView.setOnClickListener(clickListener);*/
+            itemView.setOnClickListener(clickListener);
         }
     }
 
@@ -237,6 +204,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
     }
 
     public void notifyLoadData() {
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
+        notifyItemRangeChanged(0, dataAdapter.getItemCount());
     }
 }

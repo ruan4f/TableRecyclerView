@@ -153,6 +153,12 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
     }
 
     @Override
+    public void onAdapterChanged(RecyclerView.Adapter oldAdapter, RecyclerView.Adapter newAdapter) {
+        //Completely scrap the existing layout
+        removeAllViews();
+    }
+
+    @Override
     public RecyclerView.LayoutParams generateDefaultLayoutParams() {
         return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }

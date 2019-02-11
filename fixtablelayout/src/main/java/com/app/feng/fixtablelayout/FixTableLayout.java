@@ -15,6 +15,7 @@ import android.widget.HorizontalScrollView;
 import com.app.feng.fixtablelayout.adapter.TableAdapter;
 import com.app.feng.fixtablelayout.inter.IDataAdapter;
 import com.app.feng.fixtablelayout.inter.ILoadMoreListener;
+import com.app.feng.fixtablelayout.widget.FixedGridLayoutManager;
 import com.app.feng.fixtablelayout.widget.SingleLineItemDecoration;
 import com.app.feng.fixtablelayout.widget.TableLayoutManager;
 
@@ -101,7 +102,9 @@ public class FixTableLayout extends FrameLayout {
 
         TableLayoutManager t1 = new TableLayoutManager();
 
-        recyclerView.setLayoutManager(t1);
+        FixedGridLayoutManager t2 = new FixedGridLayoutManager();
+
+        recyclerView.setLayoutManager(t2);
 
         titleView.setOnTouchListener(new OnTouchListener() {
             @Override
