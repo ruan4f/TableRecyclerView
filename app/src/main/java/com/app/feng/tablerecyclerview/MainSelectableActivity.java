@@ -50,8 +50,6 @@ public class MainSelectableActivity extends AppCompatActivity {
 
         final FixTableAdapter fixTableAdapter = new FixTableAdapter(title, data, MainSelectableActivity.this);
 
-        //this.fixTableLayout.dataUpdate();
-
         this.fixTableLayout.setAdapter(fixTableAdapter);
 
         initListeners();

@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         fixTableLayout.setAdapter(fixTableAdapter);
 
-        fixTableLayout.enableLoadMoreData();
+        /*fixTableLayout.enableLoadMoreData();
 
         fixTableLayout.setLoadMoreListener(new ILoadMoreListener() {
             @Override
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).start();
             }
-        });
+        });*/
     }
 
 }
